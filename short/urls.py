@@ -14,7 +14,7 @@ urlpatterns = [
     ),
     # URL pattern for the url_decode view
     url(
-        regex=r'^decode$',
+        regex=r'^(?P<pattern>.*)$',
         view=views.url_decode,
         name='decode'
     )
