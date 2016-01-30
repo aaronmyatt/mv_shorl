@@ -39,11 +39,13 @@ THIRD_PARTY_APPS = (
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     'shorl.users',  # custom users app
+    'short'
     # Your stuff: custom apps go here
 )
 
