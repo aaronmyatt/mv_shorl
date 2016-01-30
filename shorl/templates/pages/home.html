@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-title">
+            <h2 style="text-align: center;">Me + Mindvalley = A simple url shortener</h2>
+        </div>
+        <div class="row">
+            <h3 class="col-md-offset-3">Sign in to get started</h3>
+
+            <a id="" class="col-sm-5 col-sm-offset-1 btn btn-success" href="{% url 'account_login' %}">Log In</a>
+            <a id="" class="col-sm-5 col-sm-offset-1 btn btn-primary" href="{% url 'account_signup' %}">Signup</a>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock content %}

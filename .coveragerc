@@ -1,0 +1,5 @@
+[run]
+include = shorl/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
