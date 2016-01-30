@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h3>Shorten a URL by entering it in the box below.</h3>
+
+    <form action="{% url 'shorten:encode' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+    </form>
+
+    {% if url %}
+    {{ url }} |
+    {#{{ code }}#}
+    {% endif %}
+
+{% endblock content %}

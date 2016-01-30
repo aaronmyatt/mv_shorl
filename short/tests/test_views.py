@@ -12,11 +12,24 @@ class TestUrlEncodeView(TestCase):
     def test_get_returns_view(self):
         self.assertGoodView('shorten:encode')
 
+    def test_get_contains_template(self):
+        response = self.get('shorten:encode')
+        t = 'Shorten a URL by entering it in the box below.'
+        self.assertContains(response, t)
+
+    def test_post_contains_submitted_url(self):
+        form={'url':'http://www.google.com'}
+        response = self.post('shorten:encode', data=form)
+        self.assertContains(response, form['url'])
+
 class TestUrlDecodeView(TestCase):
 
     def test_get_returns_view(self):
-        self.assertGoodView('shorten:decode')
+        self.assertGoodView('shorten:decode', pattern='http://www.encodeme.com')
 
+    def test_handles_a_variety_of_patterns(self):
+        self.assertGoodView('shorten:decode', pattern='Fj90WMNjnas')
+        self.assertGoodView('shorten:decode', pattern='https://www.google.com')
 
 
 
