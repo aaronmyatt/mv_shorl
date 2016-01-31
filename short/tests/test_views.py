@@ -1,25 +1,40 @@
 from django.test import RequestFactory as rf
-
 from test_plus.test import TestCase
+from base64 import b64encode
 
 from ..views import (
     url_encode
 )
+from ..models import (
+    Shorten
+)
 
+URL = '/encode'
+form={'url':'http://www.google.com'}
 
-class TestUrlEncodeView(TestCase):
+class BaseUserTestCase(TestCase):
+    form={'url':'http://www.google.com'}
+
+    def setUp(self):
+        self.user = self.make_user()
+        self.get_request = rf().get(URL)
+        self.post_request = rf().post(URL, data=form)
+        self.get_request.user = self.user
+        self.post_request.user = self.user
+
+class TestUrlEncodeView(BaseUserTestCase):
 
     def test_get_returns_view(self):
-        self.assertGoodView('shorten:encode')
+        response = url_encode(self.get_request)
+        self.response_200(response)
 
     def test_get_contains_template(self):
-        response = self.get('shorten:encode')
+        response = url_encode(self.get_request)
         t = 'Shorten a URL by entering it in the box below.'
         self.assertContains(response, t)
 
     def test_post_contains_submitted_url(self):
-        form={'url':'http://www.google.com'}
-        response = self.post('shorten:encode', data=form)
+        response = url_encode(self.post_request)
         self.assertContains(response, form['url'])
 
 class TestUrlDecodeView(TestCase):
@@ -31,33 +46,25 @@ class TestUrlDecodeView(TestCase):
         self.assertGoodView('shorten:decode', pattern='Fj90WMNjnas')
         self.assertGoodView('shorten:decode', pattern='https://www.google.com')
 
+class TestShortenModel(TestCase):
 
+    def setUp(self):
+        self.user = self.make_user()
+        self.short = Shorten(
+            url=form['url'],
+            user=self.user
+        )
+        self.short.save()
 
-# class TestUserUpdateView(BaseUserTestCase):
-#
-#     def setUp(self):
-#         # call BaseUserTestCase.setUp()
-#         super(TestUserUpdateView, self).setUp()
-#         # Instantiate the view directly. Never do this outside a test!
-#         self.view = UserUpdateView()
-#         # Generate a fake request
-#         request = self.factory.get('/fake-url')
-#         # Attach the user to the request
-#         request.user = self.user
-#         # Attach the request to the view
-#         self.view.request = request
-#
-#     def test_get_success_url(self):
-#         # Expect: '/users/testuser/', as that is the default username for
-#         #   self.make_user()
-#         self.assertEqual(
-#             self.view.get_success_url(),
-#             '/users/testuser/'
-#         )
-#
-#     def test_get_object(self):
-#         # Expect: self.user, as that is the request's user object
-#         self.assertEqual(
-#             self.view.get_object(),
-#             self.user
-#         )
+    def test_urlencode_returns_shortened_url(self):
+        should_be = b64encode(bytes('2',
+                                    encoding='UTF-8'))
+        self.assertEqual(self.short.encoded, should_be)
+
+    def test_decode_returns_shortened_url(self):
+
+        encoded = b64encode(bytes('1',
+                                    encoding='UTF-8'))
+        should_be = Shorten.decode(code=encoded)
+        self.assertEqual(should_be, form['url'])
+
