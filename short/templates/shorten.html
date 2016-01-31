@@ -1,18 +1,25 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load account %}
+{% load socialaccount %}
+{% load crispy_forms_tags %}
 
 
 {% block content %}
     <h3>Shorten a URL by entering it in the box below.</h3>
 
-    <form action="{% url 'shorten:encode' %}" method="post">
+    <form action="{% url 'shorten:encode' %}" method="POST">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit" />
     </form>
+    <hr>
 
-    {% if url %}
-    {{ url }} |
-    {#{{ code }}#}
-    {% endif %}
+    {% for u in previous %}
+        <ul>
+            <li>{{ u.url }} | {{ u.encoded }}</li>
+        </ul>
+    {% endfor %}
+
 
 {% endblock content %}
