@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse, render_to_response, render
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from .forms import ShortenForm
 from .models import Shorten
 
@@ -35,4 +35,5 @@ def url_encode(request):
                   )
 
 def url_decode(request, pattern):
-    return HttpResponse()
+
+    return HttpResponseRedirect(Shorten.decode(pattern))
