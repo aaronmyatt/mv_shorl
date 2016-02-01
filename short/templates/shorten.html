@@ -15,12 +15,26 @@
     </form>
     <hr>
 
-    <ul>
-        <li> ORIGINAL | ENCODED </li>
+    <table>
+        <thead>
+            <th>ORIGINAL</th>
+            <th>----</th>
+            <th>ENCODED </th>
+        </thead>
+        <tbody>
         {% for u in previous %}
-            <li>{{ u.url }} | {{ u.encoded }}</li>
+            <tr>
+                <td>
+                    {{ u.url }}
+                </td>
+                <td></td>
+                <td>
+                    https://mvshorl.herokuapp.com/{{ u.encoded }}
+                </td>
+            </tr>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 
 
 
